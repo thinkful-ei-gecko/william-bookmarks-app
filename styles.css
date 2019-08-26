@@ -9,7 +9,7 @@ h1 {
     text-align: center;
 }
 
-.add-and-rate {
+.add-and-filter {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -24,7 +24,7 @@ h1 {
     margin-right: auto;
 }
 
-.bookmark {
+.bookmark-item {
     width: 500px;
     margin: 10px;
     border: 1px black solid;
@@ -37,7 +37,6 @@ h1 {
 }
 
 .rating {
-    display: inline-block;
 }
 
 .bookmark-controls {
@@ -45,4 +44,6 @@ h1 {
     display: block;
     margin: 10px;
 }
+
+
 
