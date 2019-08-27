@@ -13,6 +13,7 @@ const store = (function() {
   //   ]
     
   const addItem = function(bookmark) {
+    bookmark.expanded = false;
     this.bookmarks.push(bookmark);
   };
 
@@ -21,12 +22,11 @@ const store = (function() {
   };
 
   const findAndDelete = function(id) {
-    //how are we going to delete the item?
-    this.bookmarks = this.bookmarks.filter(bookmark => bookmark.id !== id)
+    this.bookmarks = this.bookmarks.filter(bookmark => bookmark.id !== id);
   };
 
   const toggleAddingBookmark = function() {
-    this.addingBookmark = !this.addingBookmark;
+    this.isAddingBookmark = !this.isAddingBookmark;
   };
 
   //Do we need to add a function for findAndExpand?
@@ -38,7 +38,7 @@ const store = (function() {
 
   return {
     bookmarks: [],
-    addingBookmark: false,
+    isAddingBookmark: false,
     error: null,
 
 

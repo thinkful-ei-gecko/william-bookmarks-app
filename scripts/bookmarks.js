@@ -9,8 +9,10 @@ const bookmarks = (function() {
 
   // THIS SECTION OF THE CODE IS PURELY FOR HANDLING THE ADD BUTTON FUNCTIONALITY
   function handleAddBookmark() {
-    $('.add-button').on('click', function(event) {
-      $('.add-bookmark-form').html(generateAddBookmarkForm());
+    $('.add-and-filter-forms').on('click', '.add-button', function(event) {
+      store.isAddingBookmark = true;
+      $('.add-button').addClass('hidden');
+      render();
     });
   }
 
@@ -45,7 +47,7 @@ const bookmarks = (function() {
   function handleAddBookmarkForm() {
     $('.add-bookmark-form').on('submit', '#add-bookmark', function(event) {
       event.preventDefault();
-      console.log('Hello World');
+      //   console.log('Hello World');
       const title = $('#bookmark-title').val();
       const url = $('#bookmark-url').val();
       const desc = $('#bookmark-description').val();
@@ -54,6 +56,7 @@ const bookmarks = (function() {
         .then(newBookmark => {
           store.addItem(newBookmark);
           render();
+          store.isAddingBookmark = false;
         });
     });
   }
@@ -62,6 +65,7 @@ const bookmarks = (function() {
     $('.add-bookmark-form').on('click', '.cancel-bookmark-button', function(event) {
       console.log('Am I working?');
       $('#add-bookmark').remove();
+      $('.add-button').removeClass('hidden');
     });
   }
 
@@ -80,7 +84,7 @@ const bookmarks = (function() {
     </li>`;
   }
 
-
+  
   /**
    * 
    * @param {array} bookmarks is an array of objects. Each object or item is a bookmark
@@ -93,38 +97,45 @@ const bookmarks = (function() {
 
 
   function render() {
-    let bookmarks = [...store.bookmarks];
-    // if (store.addingBookmark) {
-    //   $('.add-bookmark-form').html(generateAddBookmarkForm());
-    // }
+    if (store.isAddingBookmark) {
+      $('.add-bookmark-form').html(generateAddBookmarkForm());
+    } else {
+      $('.add-and-filter-forms').html(`
+        <div class="add-and-filter">
+            <button type="button" class="add-button">Add Bookmark</button>
+            <select name="Filter by Minimum Rating" id="minimum-rating-select">
+                <option value="0">Minimum Rating (Filter by):</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>`);
+    }
 
+    let bookmarks = [...store.bookmarks];
     const bookmarkString = generateBookmarkString(bookmarks);
     // console.log(bookmarkString);
     $('.my-bookmarks').html(bookmarkString);
+
+    // const id = getBookmarkIdFromElement(event.currentTarget);
+    // const bookmark = store.bookmarks.find(bookmark => bookmark.id === id);
+
+    // if (store.expanded) {
+    //   $('.my-bookmarks').html(generateExpandedBookmarkElement(bookmark)).append(bookmarkString);
+    // } else {
+    //   $('.my-bookmarks').html(bookmarkString);
+    // }
   }
 
-
-  function generateExpandedBookmarkElement(bookmark) {
-    return `
-      <li data-item-id="${bookmark.id}" class="bookmark-item expanded">
-            <h2 class="bookmark-name">${bookmark.title}</h2>
-            <h3 class="description">${bookmark.desc}</h3>
-                <p>Lorem Ipsum</p>
-            <h3 class="rating">Rating:</h3>
-                <span>${bookmark.rating}</span>
-            <div class="visit-site">
-                <a href="${bookmark.url}">Visit Site</a>
-            </div>
-            <div class="bookmark-controls">
-                <button class="collapse-button" type="button">Collapse</button>
-                <button class="delete-button" type="button">Delete</button>
-            </div>
-        </li>`;
-  }
 
   function getBookmarkIdFromElement(bookmark) {
     return $(bookmark).closest('li').data('item-id');
   }
+
+
+
   function handleDeleteBookmark(id) {
     $('.my-bookmarks').on('click', '.delete-button', function(event) {
       console.log('Am I deleting?');
@@ -137,11 +148,65 @@ const bookmarks = (function() {
     });
   }
 
+
+  function generateExpandedBookmarkElement(bookmark) {
+    return `
+      <li data-item-id="${bookmark.id}" class="bookmark-item expanded">
+            <h2 class="bookmark-name">${bookmark.title}</h2>
+            <p class="description">${bookmark.desc}</p>
+            <h3 class="rating">Rating:</h3>
+                <span>${bookmark.rating}</span>
+            <div class="visit-site">
+                <a href="${bookmark.url}">Visit Site</a>
+            </div>
+            <div class="bookmark-controls">
+                <button class="collapse-button" type="button">Collapse</button>
+                <button class="delete-button" type="button">Delete</button>
+            </div>
+        </li>`;
+  }
+
+// expanded property has been added to the bookmark (object)
+// When we CLICK on the Expand button, we want the expanded value to be TOGGLED to true
+// When it IS true, we want to render the expanded HTML for ONLY the targeted bookmark (which is what we can do with the selected ID)
+// BUT we ALSO want to render the condensed HTML for every other element
+
+  function handleExpandButton() {
+    $('.my-bookmarks').on('click', '.expand-button', function(event) {
+      // console.log('Am I expanding?');
+      const id = getBookmarkIdFromElement(event.currentTarget);
+      const bookmark = store.bookmarks.find(bookmark => bookmark.id === id);
+      console.log(bookmark);
+      bookmark.expanded = true;
+      if (bookmark.expanded) {
+        $('.my-bookmarks').html(generateExpandedBookmarkElement(bookmark));
+      } else {
+        render();
+      }
+    });
+  }
+
+
+  // Handle collapsed view
+  function handleCollapseButton() {
+    $('.my-bookmarks').on('click', '.collapse-button', function(event) {
+      // console.log('Am I collapsing?');
+      const id = getBookmarkIdFromElement(event.currentTarget);
+      const bookmark = store.bookmarks.find(bookmark => bookmark.id === id);
+      $('.my-bookmarks').html(generateBookmarkElement(bookmark));
+    });
+  }
+
+
+  //Handle filter button
+
   function bindEventListeners() {
     handleAddBookmark();
     handleAddBookmarkForm();
     handleCancelAddBookmark();
     handleDeleteBookmark();
+    handleExpandButton();
+    handleCollapseButton();
   }
 
   return {
