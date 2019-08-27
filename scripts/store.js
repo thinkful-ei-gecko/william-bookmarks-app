@@ -25,27 +25,20 @@ const store = (function() {
     this.bookmarks = this.bookmarks.filter(bookmark => bookmark.id !== id);
   };
 
-  const toggleAddingBookmark = function() {
-    this.isAddingBookmark = !this.isAddingBookmark;
-  };
-
-  //Do we need to add a function for findAndExpand?
-
-  //Do we need to add a function for findAndCollapse?
-
-  //Do we need to add a function for min. rating filter?
-
+  const setError = function(error) {
+    this.error = error;
+  }
 
   return {
     bookmarks: [],
     isAddingBookmark: false,
     error: null,
-
+    minRating: 0,
 
 
     addItem,
     findById,
     findAndDelete,
-    toggleAddingBookmark
+    setError
   };
 }());

@@ -7,9 +7,8 @@
 
 const bookmarks = (function() {
 
-  // THIS SECTION OF THE CODE IS PURELY FOR HANDLING THE ADD BUTTON FUNCTIONALITY
   function handleAddBookmark() {
-    $('.add-and-filter-forms').on('click', '.add-button', function(event) {
+    $('.add-form').on('click', '.add-button', function(event) {
       // console.log(store.isAddingBookmark);
       store.isAddingBookmark = true;
       $('.add-button').addClass('hidden');
@@ -35,12 +34,12 @@ const bookmarks = (function() {
         <div class="labels-inputs">
             <label for="bookmark-description">Description</label>
             </br>
-            <textarea rows="4" cols="50" id="bookmark-description" name="description" placeholder="Enter bookmark description" class="form-input desc" required></textarea>
+            <textarea rows="4" cols="40" id="bookmark-description" name="description" placeholder="Enter bookmark description" class="form-input-desc" required></textarea>
         </div>
         <div class="labels-inputs">
             <label for="bookmark-rating">Please enter a rating (between 1-5):</label>
             </br>
-            <input type="number" id="bookmark-rating" name="rating" value=3 min=1 max=5 class="form-input" required>
+            <input type="number" id="bookmark-rating" name="rating" value=3 min=1 max=5 class="form-input-rating" required>
         </div>
         <div class="form-buttons">
             <button type="submit" name="create-bookmark" class="create-bookmark-button form-button">CREATE</button>
@@ -51,7 +50,7 @@ const bookmarks = (function() {
   
 
   function handleAddBookmarkForm() {
-    $('.add-and-filter-forms').on('submit', '#add-bookmark', function(event) {
+    $('.add-form').on('submit', '#add-bookmark', function(event) {
       event.preventDefault();
       //   console.log('Hello World');
       const title = $('#bookmark-title').val();
@@ -63,44 +62,47 @@ const bookmarks = (function() {
           store.addItem(newBookmark);
           store.isAddingBookmark = false;
           render();
-        });
+        })
+        // .catch(err => {
+        //   store.setError(err.message);
+        //   renderError();
+        // });
     });
   }
 
   function handleCancelAddBookmark() {
-    $('.add-and-filter-forms').on('click', '.cancel-bookmark-button', function(event) {
+    $('.add-form').on('click', '.cancel-bookmark-button', function(event) {
       // console.log('Am I working?');
       store.isAddingBookmark = false;
       render();
     });
   }
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   function generateBookmarkElement(bookmark) {
     if (bookmark.expanded) {
       return `
       <li data-item-id="${bookmark.id}" class="bookmark-item expanded">
-            <h2 class="bookmark-name">${bookmark.title}</h2>
-            <p class="description">${bookmark.desc}</p>
-            <h3 class="rating">Rating: ${bookmark.rating}</h3>
-            <div class="visit-site">
-                <a href="${bookmark.url}">Visit Site</a>
-            </div>
-            <div class="bookmark-controls">
-                <button class="collapse-button" type="button">Collapse</button>
-                <button class="delete-button" type="button">Delete</button>
-            </div>
-        </li>`;
+        <h2 class="bookmark-name">${bookmark.title}</h2>
+        <p class="description">${bookmark.desc}</p>
+        <h3 class="rating">Rating: ${bookmark.rating}</h3>
+        <div class="visit-site">
+          <a href="${bookmark.url}">Visit Site</a>
+        </div>
+        <div class="bookmark-controls">
+          <button class="collapse-button" type="button">Collapse</button>
+          <button class="delete-button" type="button">Delete</button>
+        </div>
+      </li>`;
     } else {
       return `
       <li data-item-id="${bookmark.id}" class="bookmark-item">
-          <h2 class="bookmark-name">${bookmark.title}</h2>
-          <h3 class="rating">Rating: ${bookmark.rating}</h3>
-          <div class="bookmark-controls">
-              <button class="expand-button" type="button">Expand</button>
-              <button class="delete-button" type="button">Delete</button>
-          </div>
+        <h2 class="bookmark-name">${bookmark.title}</h2>
+        <h3 class="rating">Rating: ${bookmark.rating}</h3>
+        <div class="bookmark-controls">
+          <button class="expand-button" type="button">Expand</button>
+          <button class="delete-button" type="button">Delete</button>
+        </div>
       </li>`;
     }
   }
@@ -116,67 +118,48 @@ const bookmarks = (function() {
     return string.join('');
   }
 
-
+  ///////////////////////////////////////////////////////////////////////////////////
   function render() {
+    // renderError();
     // console.log(store.isAddingBookmark);
     if (store.isAddingBookmark) {
-      $('.add-and-filter-forms').html(generateAddBookmarkForm());
+      $('.add-form').html(generateAddBookmarkForm());
     } else {
-      $('.add-and-filter-forms').html(`
-        <div class="add-and-filter">
-            <button type="button" class="add-button">Add Bookmark</button>
-            <select name="Filter by Minimum Rating" id="minimum-rating-select">
-                <option value="0">Minimum Rating (Filter by):</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
+      $('.add-form').html(`
+        <div class="add">
+          <button type="button" class="add-button">Add Bookmark</button>
         </div>`);
     }
 
     let bookmarks = [...store.bookmarks];
-    const bookmarkString = generateBookmarkString(bookmarks);
-    // console.log(bookmarkString);
-    $('.my-bookmarks').html(bookmarkString);
+    let ratingFilteredBookmarks = bookmarks.filter(bookmark => bookmark.rating >= store.minRating);
+    // console.log(ratingFilteredBookmarks);
+    let htmlString = generateBookmarkString(ratingFilteredBookmarks);
+    $('.my-bookmarks').html(htmlString);
   }
-
+  ///////////////////////////////////////////////////////////////////////////////////
 
   function getBookmarkIdFromElement(bookmark) {
     return $(bookmark).closest('li').data('item-id');
   }
 
 
-
   function handleDeleteBookmark(id) {
     $('.my-bookmarks').on('click', '.delete-button', function(event) {
-      console.log('Am I deleting?');
+      // console.log('Am I deleting?');
       const id = getBookmarkIdFromElement(event.currentTarget);
       api.deleteBookmark(id)
         .then(() => {
           store.findAndDelete(id);
           render();
         });
+      //   .catch(err => {
+      //     store.setError(err.message);
+      //     renderError();
+      // });
     });
   }
 
-
-  // function generateExpandedBookmarkElement(bookmark) {
-  //   return `
-  //     <li data-item-id="${bookmark.id}" class="bookmark-item expanded">
-  //           <h2 class="bookmark-name">${bookmark.title}</h2>
-  //           <p class="description">${bookmark.desc}</p>
-  //           <h3 class="rating">Rating: ${bookmark.rating}</h3>
-  //           <div class="visit-site">
-  //               <a href="${bookmark.url}">Visit Site</a>
-  //           </div>
-  //           <div class="bookmark-controls">
-  //               <button class="collapse-button" type="button">Collapse</button>
-  //               <button class="delete-button" type="button">Delete</button>
-  //           </div>
-  //       </li>`;
-  // }
 
 
   function handleExpandButton() {
@@ -191,7 +174,6 @@ const bookmarks = (function() {
   }
 
 
-  // Handle collapsed view
   function handleCollapseButton() {
     $('.my-bookmarks').on('click', '.collapse-button', function(event) {
       // console.log('Am I collapsing?');
@@ -203,7 +185,41 @@ const bookmarks = (function() {
   }
 
 
-  //Handle filter button
+  function handleFilterButton() {
+    $('.filter').on('change', '#minimum-rating-select', function(event) {
+      // event.preventDefault();
+      const ratingValue = $(event.currentTarget).val();
+      // console.log(ratingValue);
+      store.minRating = ratingValue;
+      render();
+    });
+  }
+
+  // function generateError(message) {
+  //   return `
+  //   <section class="error-content">
+  //     <button id="cancel-error">X</button>
+  //     <p>${message}</p>
+  //   </section>
+  //   `;
+  // }
+
+  // function renderError() {
+  //   if(store.error) {
+  //     cosnt el = generateError(store.error);
+  //     $('.error-container').html(el);
+  //   } else {
+  //     $('.error-container').empty();
+  //   }
+  // }
+
+  // function handleCloseError() {
+  //   $('.error-container').on('click', '#cancel-error', () => {
+  //   store.setError(null);
+  //   renderError();
+  //   });
+  // }
+
 
   function bindEventListeners() {
     handleAddBookmark();
@@ -212,6 +228,8 @@ const bookmarks = (function() {
     handleDeleteBookmark();
     handleExpandButton();
     handleCollapseButton();
+    handleFilterButton();
+    // handleCloseError();
   }
 
   return {

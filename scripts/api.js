@@ -18,14 +18,35 @@ const api = (function () {
         if(response.ok) {
           return response.json();
         }
-        error = response.statusText
+        error = response.statusText;
       })
       .then(data => {
         // console.log(data);
         return data;
-      })
-      .catch(error);
+      });
   };
+
+  // const apiDry = function(...args) {
+  //   let error;
+  //   return fetch(...args)
+  //     .then(response => {
+  //       if(!response.ok) {
+  //         error = {code: response.status};
+  //         if (!response.headers.get('content-type').includes('json')) {
+  //           error.message = response.statusText;
+  //           return Promise.reject(error);
+  //         }
+  //       }
+  //     })
+  //     .then(data => {
+  //       // console.log(data);
+  //       if (error) {
+  //         error.message = data.message;
+  //         return Promise.reject(error);
+  //       }
+  //       return data;
+  //     });
+  // };
 
   const getBookmarks = function() {
     return apiDry(`${BASE_URL}/bookmarks`);

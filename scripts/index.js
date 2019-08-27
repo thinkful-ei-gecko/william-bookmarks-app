@@ -16,5 +16,6 @@ $(document).ready(function() {
     .then(items => {
       items.forEach(bookmark => store.addItem(bookmark));
       bookmarks.render();
-    });
+    })
+    .catch(err => console.log(err.message));
 });
