@@ -7,13 +7,14 @@
 
 $(document).ready(function() {
   bookmarks.bindEventListeners();
+  bookmarks.render();
   api.getBookmarks()
-    .then(res => {
-      console.log(res.json());
-      res.json();
-    })
-    .then(bookmarks => {
-      bookmarks.forEach(bookmark => store.addItem(bookmark));
+    // .then(res => {
+    // //   console.log(res.json());
+    //   res.json();
+    // })
+    .then(items => {
+      items.forEach(bookmark => store.addItem(bookmark));
       bookmarks.render();
     });
 });

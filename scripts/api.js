@@ -9,8 +9,26 @@ const api = (function () {
 
   const BASE_URL = 'https://thinkful-list-api.herokuapp.com/william';
 
+  //Error handling and DRY
+
+  const apiDry = function(...args) {
+    let error;
+    return fetch(...args)
+      .then(response => {
+        if(response.ok) {
+          return response.json();
+        }
+        error = response.statusText
+      })
+      .then(data => {
+        console.log(data);
+        return data;
+      })
+      .catch(error);
+  };
+
   const getBookmarks = function() {
-    return fetch(`${BASE_URL}/bookmarks`);
+    return apiDry(`${BASE_URL}/bookmarks`);
   };
 
   const createBookmark = function(title, url, desc, rating) {
@@ -21,7 +39,7 @@ const api = (function () {
         desc: desc,
         rating: rating
       });
-    return fetch(`${BASE_URL}/bookmarks`, {
+    return apiDry(`${BASE_URL}/bookmarks`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -31,7 +49,7 @@ const api = (function () {
   };
 
   const deleteBookmark = function(id) {
-    return fetch(`${BASE_URL}/bookmarks/${id}`, {
+    return apiDry(`${BASE_URL}/bookmarks/${id}`, {
       method: 'DELETE'
     });
   };
@@ -43,7 +61,3 @@ const api = (function () {
   };
 
 }());
-
-api.getBookmarks()
-  .then(res => res.json())
-  .then(json => console.log(json));

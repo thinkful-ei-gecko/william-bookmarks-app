@@ -6,11 +6,11 @@
 
 const store = (function() {
 
-  const bookmarks = [
-      {id: cuid(), name: "Bookmark 1", url: "https://www.google.com", rating: 5, description: Lorem ipsum, expanded: false},
-      {id: cuid(), name: "Bookmark 2", url: "https://www.yahoo.com", rating: 3, description: Lorem ipsum, expanded: false},
-      {id: cuid(), name: "Bookmark 3", url: "https://www.bing.com", rating: 1, description: Lorem ipsum, expanded: false}
-  ]
+  //   const bookmarks = [
+  //       {id: cuid(), name: "Bookmark 1", url: "https://www.google.com", rating: 5, description: Lorem ipsum, expanded: false},
+  //       {id: cuid(), name: "Bookmark 2", url: "https://www.yahoo.com", rating: 3, description: Lorem ipsum, expanded: false},
+  //       {id: cuid(), name: "Bookmark 3", url: "https://www.bing.com", rating: 1, description: Lorem ipsum, expanded: false}
+  //   ]
     
   const addItem = function(bookmark) {
     this.bookmarks.push(bookmark);
@@ -26,8 +26,8 @@ const store = (function() {
   };
 
   const toggleAddingBookmark = function() {
-      this.addingBookmark = !this.addingBookmark;
-  }
+    this.addingBookmark = !this.addingBookmark;
+  };
 
   //Do we need to add a function for findAndExpand?
 
@@ -37,7 +37,7 @@ const store = (function() {
 
 
   return {
-    bookmarks,
+    bookmarks: [],
     addingBookmark: false,
     error: null,
 
