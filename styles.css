@@ -1,12 +1,20 @@
 * {
     box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: lightgrey;
 }
 
 h1 {
     width: 400px;
+    margin-top: 50px;
+    margin-bottom: 50px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+    font-size: 50px;
 }
 
 .add-and-filter {
@@ -29,22 +37,224 @@ h1 {
     margin: 10px;
     border: 1px black solid;
     list-style-type: none;
-}
-
-.bookmark-name {
-    margin: 10px;
-    display: inline-block;
-}
-
-.rating {
-}
-
-.bookmark-controls {
-    clear: right;
-    display: block;
-    margin: 10px;
+    border-radius: 5px;
 }
 
 .hidden {
     display: none;
+}
+
+.add-and-filter-forms {
+    margin-bottom: 40px;
+}
+
+.add-button {
+    background-color: rgb(71, 196, 71);
+    border: none;
+    color: white;
+    padding: 10px;
+    border: 1px darkgreen solid;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 15px;
+    width: 185px;
+}
+
+.add-button:hover {
+    background-color: darkgreen;
+    color: white;
+}
+
+select {
+    width: 185x;
+    border: 1px solid black;
+    padding: 5px;
+}
+
+#add-bookmark {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid black;
+    padding: 8px;
+    padding-top: 1px;
+    margin-top: 10px;
+    border-radius: 5px;
+    background: lightblue
+}
+
+#add-bookmark > h2 {
+    width: 300px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    font-size: 30px;
+}
+
+.labels-inputs{
+    margin-bottom: 15px;
+    padding-left: 5px;
+}
+
+.form-input {
+    margin-top: 3px;
+    width: 300px;
+    height: 30px;
+    border: 1px grey solid;
+    padding-left: 3px;
+}
+
+.desc {
+    width: 400px;
+    height: 100px;
+    border: 1px grey solid;
+}
+
+#bookmark-rating {
+    width: 35px;
+    height: 25px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-buttons {
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 8px;
+}
+
+.form-button {
+    background-color: rgb(71, 196, 71);
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    border: 1px darkgreen solid;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    width: 125px;
+}
+
+.cancel-bookmark-button {
+    background-color: rgb(155, 155, 155);
+    border: 1px rgb(94, 94, 94) solid;
+    font-weight: normal;
+}
+
+.form-button:hover {
+    background-color: darkgreen;
+    color: white;
+  }
+
+.cancel-bookmark-button:hover {
+    background-color: rgb(107, 107, 107);
+    color: white;
+}
+
+.bookmark-item {
+    background-color: lightblue;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.bookmark-name, .rating {
+    margin: 8px;
+}
+
+.bookmark-name {
+    font-size: 35px;
+}
+
+.rating {
+    font-size: 20px;
+}
+
+.bookmark-controls {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.expand-button, .delete-button {
+    background-color: rgb(71, 196, 71);
+    border: none;
+    color: white;
+    text-align: center;
+    border: 1px darkgreen solid;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    padding: 5px;
+    width: 80px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.expand-button:hover {
+    background-color: darkgreen;
+    color: white;
+}
+
+.delete-button {
+    background-color: rgb(155, 155, 155);
+    border: 1px rgb(94, 94, 94) solid;
+    font-weight: normal;
+}
+
+.delete-button:hover {
+    background-color: rgb(107, 107, 107);
+    color: white;
+}
+
+.description {
+    margin: 0;
+    margin-top: 8px;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.visit-site {
+    margin-top: 15px;
+    margin-bottom: 20px;
+    border: 1px solid black;
+    padding: 15px;
+    background-color: rgb(75, 190, 75)
+}
+
+a {
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+a:hover {
+    color: purple;
+}
+
+.collapse-button {
+    background-color: rgb(250, 95, 95);
+    border: none;
+    color: white;
+    text-align: center;
+    border: 1px darkgreen solid;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    padding: 5px;
+    width: 80px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.collapse-button:hover {
+    background-color: red;
+    color: white;
 }

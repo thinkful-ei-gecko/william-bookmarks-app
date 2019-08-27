@@ -10,6 +10,7 @@ const bookmarks = (function() {
   // THIS SECTION OF THE CODE IS PURELY FOR HANDLING THE ADD BUTTON FUNCTIONALITY
   function handleAddBookmark() {
     $('.add-and-filter-forms').on('click', '.add-button', function(event) {
+      // console.log(store.isAddingBookmark);
       store.isAddingBookmark = true;
       $('.add-button').addClass('hidden');
       render();
@@ -21,31 +22,36 @@ const bookmarks = (function() {
     return `
       <form id="add-bookmark">
         <h2>Create a Bookmark</h2>
-        <div>
+        <div class="labels-inputs">
             <label for="bookmark-title">Bookmark Title</label>
-            <input type="text" id="bookmark-title" name="title" placeholder="Enter title" required>
-
+            </br>
+            <input type="text" id="bookmark-title" name="title" placeholder="Enter title" class="form-input" required>
+        </div>
+        <div class="labels-inputs">
             <label for="bookmark-url">URL</label>
-            <input type="url" id="bookmark-url" name="url" value="http://" required>
+            </br>
+            <input type="url" id="bookmark-url" name="url" value="http://" class="form-input" required>
         </div>
-        <div>
+        <div class="labels-inputs">
             <label for="bookmark-description">Description</label>
-            <input type="text" id="bookmark-description" name="description" placeholder="Enter bookmark description" required>
+            </br>
+            <textarea rows="4" cols="50" id="bookmark-description" name="description" placeholder="Enter bookmark description" class="form-input desc" required></textarea>
         </div>
-        <div>
+        <div class="labels-inputs">
             <label for="bookmark-rating">Please enter a rating (between 1-5):</label>
-            <input type="number" id="bookmark-rating" name="rating" value=3 min=1 max=5 required>
+            </br>
+            <input type="number" id="bookmark-rating" name="rating" value=3 min=1 max=5 class="form-input" required>
         </div>
-        <div>
-            <button type="submit" name="create-bookmark" class="create-bookmark-button">CREATE</button>
-            <button type="button" name="cancel-bookmark" class="cancel-bookmark-button">Cancel</button>
+        <div class="form-buttons">
+            <button type="submit" name="create-bookmark" class="create-bookmark-button form-button">CREATE</button>
+            <button type="button" name="cancel-bookmark" class="cancel-bookmark-button form-button">Cancel</button>
         </div>
       </form>`;
   }
   
 
   function handleAddBookmarkForm() {
-    $('.add-bookmark-form').on('submit', '#add-bookmark', function(event) {
+    $('.add-and-filter-forms').on('submit', '#add-bookmark', function(event) {
       event.preventDefault();
       //   console.log('Hello World');
       const title = $('#bookmark-title').val();
@@ -55,33 +61,48 @@ const bookmarks = (function() {
       api.createBookmark(title, url, desc, rating)
         .then(newBookmark => {
           store.addItem(newBookmark);
-          render();
           store.isAddingBookmark = false;
+          render();
         });
     });
   }
 
   function handleCancelAddBookmark() {
-    $('.add-bookmark-form').on('click', '.cancel-bookmark-button', function(event) {
-      console.log('Am I working?');
-      $('#add-bookmark').remove();
-      $('.add-button').removeClass('hidden');
+    $('.add-and-filter-forms').on('click', '.cancel-bookmark-button', function(event) {
+      // console.log('Am I working?');
+      store.isAddingBookmark = false;
+      render();
     });
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   function generateBookmarkElement(bookmark) {
-    return `
-    <li data-item-id="${bookmark.id}" class="bookmark-item">
-        <h2 class="bookmark-name">${bookmark.title}</h2>
-        <h3 class="rating">Rating:</h3>
-            <span>${bookmark.rating}</span>
-        <div class="bookmark-controls">
-            <button class="expand-button" type="button">Expand</button>
-            <button class="delete-button" type="button">Delete</button>
-        </div>
-    </li>`;
+    if (bookmark.expanded) {
+      return `
+      <li data-item-id="${bookmark.id}" class="bookmark-item expanded">
+            <h2 class="bookmark-name">${bookmark.title}</h2>
+            <p class="description">${bookmark.desc}</p>
+            <h3 class="rating">Rating: ${bookmark.rating}</h3>
+            <div class="visit-site">
+                <a href="${bookmark.url}">Visit Site</a>
+            </div>
+            <div class="bookmark-controls">
+                <button class="collapse-button" type="button">Collapse</button>
+                <button class="delete-button" type="button">Delete</button>
+            </div>
+        </li>`;
+    } else {
+      return `
+      <li data-item-id="${bookmark.id}" class="bookmark-item">
+          <h2 class="bookmark-name">${bookmark.title}</h2>
+          <h3 class="rating">Rating: ${bookmark.rating}</h3>
+          <div class="bookmark-controls">
+              <button class="expand-button" type="button">Expand</button>
+              <button class="delete-button" type="button">Delete</button>
+          </div>
+      </li>`;
+    }
   }
 
   
@@ -97,8 +118,9 @@ const bookmarks = (function() {
 
 
   function render() {
+    // console.log(store.isAddingBookmark);
     if (store.isAddingBookmark) {
-      $('.add-bookmark-form').html(generateAddBookmarkForm());
+      $('.add-and-filter-forms').html(generateAddBookmarkForm());
     } else {
       $('.add-and-filter-forms').html(`
         <div class="add-and-filter">
@@ -118,15 +140,6 @@ const bookmarks = (function() {
     const bookmarkString = generateBookmarkString(bookmarks);
     // console.log(bookmarkString);
     $('.my-bookmarks').html(bookmarkString);
-
-    // const id = getBookmarkIdFromElement(event.currentTarget);
-    // const bookmark = store.bookmarks.find(bookmark => bookmark.id === id);
-
-    // if (store.expanded) {
-    //   $('.my-bookmarks').html(generateExpandedBookmarkElement(bookmark)).append(bookmarkString);
-    // } else {
-    //   $('.my-bookmarks').html(bookmarkString);
-    // }
   }
 
 
@@ -149,40 +162,31 @@ const bookmarks = (function() {
   }
 
 
-  function generateExpandedBookmarkElement(bookmark) {
-    return `
-      <li data-item-id="${bookmark.id}" class="bookmark-item expanded">
-            <h2 class="bookmark-name">${bookmark.title}</h2>
-            <p class="description">${bookmark.desc}</p>
-            <h3 class="rating">Rating:</h3>
-                <span>${bookmark.rating}</span>
-            <div class="visit-site">
-                <a href="${bookmark.url}">Visit Site</a>
-            </div>
-            <div class="bookmark-controls">
-                <button class="collapse-button" type="button">Collapse</button>
-                <button class="delete-button" type="button">Delete</button>
-            </div>
-        </li>`;
-  }
+  // function generateExpandedBookmarkElement(bookmark) {
+  //   return `
+  //     <li data-item-id="${bookmark.id}" class="bookmark-item expanded">
+  //           <h2 class="bookmark-name">${bookmark.title}</h2>
+  //           <p class="description">${bookmark.desc}</p>
+  //           <h3 class="rating">Rating: ${bookmark.rating}</h3>
+  //           <div class="visit-site">
+  //               <a href="${bookmark.url}">Visit Site</a>
+  //           </div>
+  //           <div class="bookmark-controls">
+  //               <button class="collapse-button" type="button">Collapse</button>
+  //               <button class="delete-button" type="button">Delete</button>
+  //           </div>
+  //       </li>`;
+  // }
 
-// expanded property has been added to the bookmark (object)
-// When we CLICK on the Expand button, we want the expanded value to be TOGGLED to true
-// When it IS true, we want to render the expanded HTML for ONLY the targeted bookmark (which is what we can do with the selected ID)
-// BUT we ALSO want to render the condensed HTML for every other element
 
   function handleExpandButton() {
     $('.my-bookmarks').on('click', '.expand-button', function(event) {
       // console.log('Am I expanding?');
       const id = getBookmarkIdFromElement(event.currentTarget);
       const bookmark = store.bookmarks.find(bookmark => bookmark.id === id);
-      console.log(bookmark);
+      // console.log(bookmark);
       bookmark.expanded = true;
-      if (bookmark.expanded) {
-        $('.my-bookmarks').html(generateExpandedBookmarkElement(bookmark));
-      } else {
-        render();
-      }
+      render();
     });
   }
 
@@ -193,7 +197,8 @@ const bookmarks = (function() {
       // console.log('Am I collapsing?');
       const id = getBookmarkIdFromElement(event.currentTarget);
       const bookmark = store.bookmarks.find(bookmark => bookmark.id === id);
-      $('.my-bookmarks').html(generateBookmarkElement(bookmark));
+      bookmark.expanded = false;
+      render();
     });
   }
 
