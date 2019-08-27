@@ -7,6 +7,7 @@
 
 const bookmarks = (function() {
 
+  // THIS SECTION OF THE CODE IS PURELY FOR HANDLING THE ADD BUTTON FUNCTIONALITY
   function handleAddBookmark() {
     $('.add-button').on('click', function(event) {
       $('.add-bookmark-form').html(generateAddBookmarkForm());
@@ -16,27 +17,27 @@ const bookmarks = (function() {
 
   function generateAddBookmarkForm() {
     return `
-      <h2>Create a Bookmark</h2>
       <form id="add-bookmark">
-          <div>
-              <label for="bookmark-title">Bookmark Title</label>
-              <input type="text" id="bookmark-title" name="title" placeholder="Enter title" required>
+        <h2>Create a Bookmark</h2>
+        <div>
+            <label for="bookmark-title">Bookmark Title</label>
+            <input type="text" id="bookmark-title" name="title" placeholder="Enter title" required>
 
-              <label for="bookmark-url">URL</label>
-              <input type="url" id="bookmark-url" name="url" value="http://" required>
-          </div>
-          <div>
-              <label for="bookmark-description">Description</label>
-              <input type="text" id="bookmark-description" name="description" placeholder="Enter bookmark description" required>
-          </div>
-          <div>
-              <label for="bookmark-rating">Please enter a rating (between 1-5):</label>
-              <input type="number" id="bookmark-rating" name="rating" value=3 min=1 max=5 required>
-          </div>
-          <div>
-              <button type="submit" name="create-bookmark" class="create-bookmark-button">CREATE</button>
-              <button type="button" name="cancel-bookmark" class="cancel-bookmark-button">Cancel</button>
-          </div>
+            <label for="bookmark-url">URL</label>
+            <input type="url" id="bookmark-url" name="url" value="http://" required>
+        </div>
+        <div>
+            <label for="bookmark-description">Description</label>
+            <input type="text" id="bookmark-description" name="description" placeholder="Enter bookmark description" required>
+        </div>
+        <div>
+            <label for="bookmark-rating">Please enter a rating (between 1-5):</label>
+            <input type="number" id="bookmark-rating" name="rating" value=3 min=1 max=5 required>
+        </div>
+        <div>
+            <button type="submit" name="create-bookmark" class="create-bookmark-button">CREATE</button>
+            <button type="button" name="cancel-bookmark" class="cancel-bookmark-button">Cancel</button>
+        </div>
       </form>`;
   }
   
@@ -57,6 +58,14 @@ const bookmarks = (function() {
     });
   }
 
+  function handleCancelAddBookmark() {
+    $('.add-bookmark-form').on('click', '.cancel-bookmark-button', function(event) {
+      console.log('Am I working?');
+      $('#add-bookmark').remove();
+    });
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   function generateBookmarkElement(bookmark) {
     return `
@@ -77,7 +86,7 @@ const bookmarks = (function() {
    * @param {array} bookmarks is an array of objects. Each object or item is a bookmark
    */
   function generateBookmarkString(bookmarkList) {
-    console.log(bookmarkList);
+    // console.log(bookmarkList);
     const string = bookmarkList.map(bookmark => generateBookmarkElement(bookmark));
     return string.join('');
   }
@@ -90,7 +99,7 @@ const bookmarks = (function() {
     // }
 
     const bookmarkString = generateBookmarkString(bookmarks);
-    console.log(bookmarkString);
+    // console.log(bookmarkString);
     $('.my-bookmarks').html(bookmarkString);
   }
 
@@ -113,28 +122,26 @@ const bookmarks = (function() {
         </li>`;
   }
 
-
-  // function renderBookmarkElement() {
-  //   $('.my-bookmarks').html(generateBookmarkElement({id: cuid(), name: "Bookmark 1", url: "https://www.google.com", rating: 5, description: Lorem ipsum, expanded: false}));
-  // }
-
-  function handleCancelAddBookmark() {
-    $('.add-bookmark-form').on('click', '.cancel-bookmark-button', function(event) {
-      console.log('Am I working?');
-    });
+  function getBookmarkIdFromElement(bookmark) {
+    return $(bookmark).closest('li').data('item-id');
   }
-
-
-
-  function handleDeleteBookmark() {
+  function handleDeleteBookmark(id) {
     $('.my-bookmarks').on('click', '.delete-button', function(event) {
       console.log('Am I deleting?');
+      const id = getBookmarkIdFromElement(event.currentTarget);
+      api.deleteBookmark(id)
+        .then(() => {
+          store.findAndDelete(id);
+          render();
+        });
     });
   }
 
   function bindEventListeners() {
     handleAddBookmark();
     handleAddBookmarkForm();
+    handleCancelAddBookmark();
+    handleDeleteBookmark();
   }
 
   return {
