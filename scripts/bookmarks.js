@@ -22,7 +22,7 @@ const bookmarks = (function() {
       <form id="add-bookmark">
         <h2>Create a Bookmark</h2>
         <div class="labels-inputs">
-            <label for="bookmark-title">Bookmark Title</label>
+            <label for="bookmark-title" class="bookmark-title">Bookmark Title</label>
             </br>
             <input type="text" id="bookmark-title" name="title" placeholder="Enter title" class="form-input" required>
         </div>
@@ -62,11 +62,7 @@ const bookmarks = (function() {
           store.addItem(newBookmark);
           store.isAddingBookmark = false;
           render();
-        })
-        // .catch(err => {
-        //   store.setError(err.message);
-        //   renderError();
-        // });
+        });
     });
   }
 
@@ -153,10 +149,6 @@ const bookmarks = (function() {
           store.findAndDelete(id);
           render();
         });
-      //   .catch(err => {
-      //     store.setError(err.message);
-      //     renderError();
-      // });
     });
   }
 
@@ -187,38 +179,12 @@ const bookmarks = (function() {
 
   function handleFilterButton() {
     $('.filter').on('change', '#minimum-rating-select', function(event) {
-      // event.preventDefault();
       const ratingValue = $(event.currentTarget).val();
       // console.log(ratingValue);
       store.minRating = ratingValue;
       render();
     });
   }
-
-  // function generateError(message) {
-  //   return `
-  //   <section class="error-content">
-  //     <button id="cancel-error">X</button>
-  //     <p>${message}</p>
-  //   </section>
-  //   `;
-  // }
-
-  // function renderError() {
-  //   if(store.error) {
-  //     cosnt el = generateError(store.error);
-  //     $('.error-container').html(el);
-  //   } else {
-  //     $('.error-container').empty();
-  //   }
-  // }
-
-  // function handleCloseError() {
-  //   $('.error-container').on('click', '#cancel-error', () => {
-  //   store.setError(null);
-  //   renderError();
-  //   });
-  // }
 
 
   function bindEventListeners() {
@@ -229,7 +195,6 @@ const bookmarks = (function() {
     handleExpandButton();
     handleCollapseButton();
     handleFilterButton();
-    // handleCloseError();
   }
 
   return {

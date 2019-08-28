@@ -11,42 +11,38 @@ const api = (function () {
 
   //Error handling and DRY
 
-  const apiDry = function(...args) {
-    let error;
-    return fetch(...args)
-      .then(response => {
-        if(response.ok) {
-          return response.json();
-        }
-        error = response.statusText;
-      })
-      .then(data => {
-        // console.log(data);
-        return data;
-      });
-  };
-
   // const apiDry = function(...args) {
   //   let error;
   //   return fetch(...args)
   //     .then(response => {
-  //       if(!response.ok) {
-  //         error = {code: response.status};
-  //         if (!response.headers.get('content-type').includes('json')) {
-  //           error.message = response.statusText;
-  //           return Promise.reject(error);
-  //         }
+  //       if(response.ok) {
+  //         return response.json();
   //       }
+  //       error = response.statusText;
   //     })
   //     .then(data => {
-  //       // console.log(data);
-  //       if (error) {
-  //         error.message = data.message;
-  //         return Promise.reject(error);
-  //       }
   //       return data;
   //     });
   // };
+
+  const apiDry = function (...args) {
+    let error;
+    return fetch(...args)
+      .then(res => {
+        if (!res.ok) {
+          error = {code: res.status};
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (error) {
+          error.message = data.message;
+          return Promise.reject(error);
+        }
+        return data;
+      });
+  };
+
 
   const getBookmarks = function() {
     return apiDry(`${BASE_URL}/bookmarks`);

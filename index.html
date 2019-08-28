@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="description" content="bookmarks of your favorite websites">
-    <link rel="stylesheet" href="stlyes2.css">
+    <link rel="stylesheet" href="styles.css">
     <title>Bookmarks</title>
 </head>
 <body>
@@ -13,10 +13,8 @@
         <h1>My Bookmarks</h1>
     </header>
     <main role="main">
-        <!-- <div class="error-container">
-            HTML TEMPLATE FOR ERROR MESSAGE
-        </div> -->
-        <section class="filter">
+        <p class="error-message"></p>
+        <section class="filter" aria-live="polite">
             <select name="Filter by Minimum Rating" id="minimum-rating-select">
                 <option value="0">Min. Rating (Filter by):</option>
                 <option value="1">1</option>
@@ -26,7 +24,7 @@
                 <option value="5">5</option>
             </select>
         </section>
-        <section class="add-form">
+        <section class="add-form" aria-live="polite">
             <!-- HTML TEMPLATE FOR ADD BOOKMARK BUTTON -->
             <!-- <div class="add-and-filter">
                 <button type="button" class="add-button">Add Bookmark</button>
@@ -64,7 +62,7 @@
                     </div>
                 </form> -->
         </section>
-        <ul class="my-bookmarks">
+        <ul class="my-bookmarks" aria-live="polite">
         <!-- HTML TEMPLATE FOR EXPANDED BOOKMARK VIEW -->
             <!-- <li data-item-id="" class="bookmark-item expanded">
                 <h2 class="bookmark-name">Bookmark 1</h2>
@@ -93,7 +91,7 @@
                </div>
             </li> -->
         </ul>
-    </main
+    </main>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cuid/1.3.8/browser-cuid.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="scripts/store.js"></script>
