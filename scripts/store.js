@@ -25,20 +25,25 @@ const store = (function() {
     this.bookmarks = this.bookmarks.filter(bookmark => bookmark.id !== id);
   };
 
-  const setError = function(error) {
-    this.error = error;
-  }
+  const error = {
+    message: null
+  };
+
+  const addErrorToStore = function(errorMessage) {
+    error.message = errorMessage;
+    console.log(error.message);
+  };
 
   return {
     bookmarks: [],
     isAddingBookmark: false,
-    error: null,
+    error,
     minRating: 0,
 
 
     addItem,
     findById,
     findAndDelete,
-    setError
+    addErrorToStore
   };
 }());

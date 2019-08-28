@@ -61,15 +61,21 @@ const bookmarks = (function() {
         .then(newBookmark => {
           store.addItem(newBookmark);
           store.isAddingBookmark = false;
+          store.error.message = null;
+          render();
+        })
+        .catch(err => {
+          store.addErrorToStore(err.message);
           render();
         });
-    });
+    })
   }
 
   function handleCancelAddBookmark() {
     $('.add-form').on('click', '.cancel-bookmark-button', function(event) {
       // console.log('Am I working?');
       store.isAddingBookmark = false;
+      store.error.message = null;
       render();
     });
   }
@@ -125,6 +131,12 @@ const bookmarks = (function() {
         <div class="add">
           <button type="button" class="add-button">Add Bookmark</button>
         </div>`);
+    }
+
+    if (store.error.message) {
+      $('.error-message').append(store.error.message);
+    } else {
+      $('.error-message').empty();
     }
 
     let bookmarks = [...store.bookmarks];
