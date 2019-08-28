@@ -11,20 +11,6 @@ const api = (function () {
 
   //Error handling and DRY
 
-  // const apiDry = function(...args) {
-  //   let error;
-  //   return fetch(...args)
-  //     .then(response => {
-  //       if(response.ok) {
-  //         return response.json();
-  //       }
-  //       error = response.statusText;
-  //     })
-  //     .then(data => {
-  //       return data;
-  //     });
-  // };
-
   const apiDry = function (...args) {
     let error;
     return fetch(...args)
